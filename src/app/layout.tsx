@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/react";
 import { SITE } from "@/site";
@@ -20,7 +20,12 @@ const mono = localFont({
 export const metadata: Metadata = {
   title: { default: `${SITE.name}: the universe, one scale at a time`, template: `%s · ${SITE.name}` },
   description: SITE.heroText,
+  metadataBase: new URL("https://usaaao-guide.vercel.app"),
+  openGraph: { siteName: SITE.name, type: "website", title: `${SITE.name}: the universe, one scale at a time`, description: SITE.heroText },
+  twitter: { card: "summary_large_image" },
 };
+
+export const viewport: Viewport = { themeColor: "#05070d", colorScheme: "dark" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

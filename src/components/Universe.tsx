@@ -57,6 +57,13 @@ const NEAR: [string, number, number, number, string][] = [
   ["Groombridge 34", 11.6, 0.3, 44.0, "#ff9c6b"],
 ];
 
+// stylised continents: lon, lat, half-width, half-height (degrees)
+const LAND: [number, number, number, number][] = [
+  [-100, 45, 28, 17], [-60, -14, 13, 24], [-42, 72, 11, 6], [15, 50, 20, 10], [75, 52, 45, 14],
+  [20, 5, 20, 27], [78, 22, 8, 9], [112, 2, 10, 6], [134, -25, 14, 9], [0, -82, 60, 7],
+];
+const D2R = Math.PI / 180;
+
 function rng(seed: number) {
   let s = seed;
   return () => ((s = (s * 16807) % 2147483647) - 1) / 2147483646;
@@ -166,10 +173,21 @@ function buildWorld() {
     cmb.push({ a, c: `rgb(${rgb.join(",")})` });
   }
 
+  // Earth: dots scattered over each continent; some double as city lights on the night side
+  const land: { lon: number; lat: number; city: boolean }[] = [];
+  for (const [clon, clat, rx, ry] of LAND) {
+    const n = Math.round(rx * ry * 1.0);
+    for (let i = 0; i < n; i++) {
+      const lon = clon + Math.max(-1, Math.min(1, gauss(r) * 0.5)) * rx;
+      const lat = clat + Math.max(-1, Math.min(1, gauss(r) * 0.5)) * ry;
+      land.push({ lon, lat, city: clat > -60 && r() < 0.16 });
+    }
+  }
+
   const bg: { x: number; y: number; o: number }[] = [];
   for (let i = 0; i < 260; i++) bg.push({ x: r(), y: r(), o: 0.15 + r() * 0.35 });
 
-  return { field, gal, local, web, cmb, bg };
+  return { field, gal, local, web, cmb, bg, land };
 }
 
 /* ---------- helpers ---------- */
@@ -209,6 +227,16 @@ export default function Universe() {
   const hudLight = useRef<HTMLSpanElement>(null);
   const hudPlace = useRef<HTMLSpanElement>(null);
   const hint = useRef<HTMLDivElement>(null);
+  const rail = useRef<(HTMLButtonElement | null)[]>([]);
+
+  /** Scroll to the point where stop i is held. */
+  const jump = (i: number) => {
+    const el = box.current!;
+    const top = el.getBoundingClientRect().top + window.scrollY;
+    const span = el.offsetHeight - window.innerHeight;
+    const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: top + (span * i) / (STOPS.length - 1), behavior: calm ? "auto" : "smooth" });
+  };
 
   useEffect(() => {
     const canvas = cvs.current!;
@@ -246,9 +274,10 @@ export default function Universe() {
       const years = still ? 0 : (now - t0) / 1000 / 30; // one year every 30 s
 
       const wide = W > 820;
+      const side = wide ? Math.min(W, H) : Math.min(W * 0.9, H * 0.36); // size of the picture
       const cx = wide ? W * 0.64 : W * 0.5;
-      const cy = wide ? H * 0.5 : H * 0.36;
-      const s = (Math.min(W, H) * 1.05) / z; // px per meter
+      const cy = wide ? H * 0.5 : 150 + side * 0.5;
+      const s = (side * 1.05) / z; // px per meter
 
       // Earth's place in its orbit
       const ea = PLANETS[2].th + (2 * Math.PI * years) / PLANETS[2].p;
@@ -275,7 +304,7 @@ export default function Universe() {
         ctx.globalAlpha = a;
         ctx.fillStyle = color;
         ctx.font = `12px ${mono}`;
-        ctx.fillText(txt, x, y);
+        ctx.fillText(txt, Math.min(x, W - 12 - ctx.measureText(txt).width), y);
       };
       const dots = (pts: Pt[], ox: number, oy: number, a: number, rot = 0) => {
         if (a <= 0) return;
@@ -361,7 +390,7 @@ export default function Universe() {
           ctx.beginPath();
           ctx.arc(X(x), Y(y), n === "Sirius" || n === "Alpha Centauri" || n === "Procyon" ? 3 : 2, 0, Math.PI * 2);
           ctx.fill();
-          if (["Alpha Centauri", "Sirius", "Barnard's Star", "Procyon", "Tau Ceti", "Epsilon Eridani", "61 Cygni", "Wolf 359"].includes(n))
+          if ((W > 820 ? ["Alpha Centauri", "Sirius", "Barnard's Star", "Procyon", "Tau Ceti", "Epsilon Eridani", "61 Cygni", "Wolf 359"] : ["Alpha Centauri", "Sirius", "Barnard's Star", "Procyon"]).includes(n))
             label(`${n}, ${d} ly`, X(x) + 9, Y(y) + 4, ln);
         }
         if (ln > 0) {
@@ -451,6 +480,16 @@ export default function Universe() {
         if (a > 0 && re > 0.3) {
           const dx = -Math.cos(ea), dy = Math.sin(ea); // toward the Sun, screen space
           const r = Math.max(re, 1.8);
+          if (re > 20) {
+            const halo = ctx.createRadialGradient(ex, ey, r * 0.96, ex, ey, r * 1.16);
+            halo.addColorStop(0, "rgba(120,170,255,0.32)");
+            halo.addColorStop(1, "rgba(120,170,255,0)");
+            ctx.globalAlpha = a;
+            ctx.fillStyle = halo;
+            ctx.beginPath();
+            ctx.arc(ex, ey, r * 1.16, 0, Math.PI * 2);
+            ctx.fill();
+          }
           // day side toward the Sun, a soft terminator, then limb darkening
           const lg2 = ctx.createLinearGradient(ex + dx * r, ey + dy * r, ex - dx * r, ey - dy * r);
           lg2.addColorStop(0, "#8fb9ea");
@@ -462,6 +501,27 @@ export default function Universe() {
           ctx.beginPath();
           ctx.arc(ex, ey, r, 0, Math.PI * 2);
           ctx.fill();
+          if (re > 26) {
+            const spin = still ? 0.9 : (now / 1000) * 0.05; // a slow turn
+            const sz = Math.max(1.6, r * 0.021);
+            for (const q of world.land) {
+              const lon = q.lon * D2R + spin, lat = q.lat * D2R;
+              const cz = Math.cos(lat) * Math.cos(lon); // toward the viewer
+              if (cz <= 0.03) continue;
+              const u = Math.cos(lat) * Math.sin(lon), v = Math.sin(lat);
+              const day = clamp((u * dx - v * dy) * 2.2 + 0.5); // 1 on the lit side
+              const px = ex + u * r, py = ey - v * r;
+              if (day > 0.05) {
+                ctx.globalAlpha = a * day * 0.95 * Math.min(1, cz * 3);
+                ctx.fillStyle = "#9bc58c";
+                ctx.fillRect(px - sz / 2, py - sz / 2, sz, sz * Math.max(cz, 0.4));
+              } else if (q.city) {
+                ctx.globalAlpha = a * 0.7 * Math.min(1, cz * 3);
+                ctx.fillStyle = "#ffd58a";
+                ctx.fillRect(px, py, 1.3, 1.3);
+              }
+            }
+          }
           const limb = ctx.createRadialGradient(ex, ey, r * 0.6, ex, ey, r);
           limb.addColorStop(0, "rgba(5,7,13,0)");
           limb.addColorStop(1, "rgba(5,7,13,0.55)");
@@ -482,7 +542,7 @@ export default function Universe() {
         // the celestial sphere around Earth
         const aS = win(logz, 7.45, 7.8, 8.15, 8.55);
         if (aS > 0) {
-          const R = Math.min(W, H) * 0.34;
+          const R = side * 0.34;
           ctx.lineWidth = 1;
           ctx.globalAlpha = aS * 0.55;
           ctx.strokeStyle = "#8db8ff";
@@ -524,6 +584,7 @@ export default function Universe() {
         const d = Math.abs(p - i);
         const o = d < 0.2 ? 1 : d > 0.34 ? 0 : 1 - (d - 0.2) / 0.14;
         el.style.opacity = String(o);
+        el.style.visibility = o < 0.02 ? "hidden" : "visible";
         el.style.transform = `translateY(${(p - i) * -40}px)`;
         el.style.pointerEvents = o > 0.5 ? "auto" : "none";
       });
@@ -531,21 +592,47 @@ export default function Universe() {
       if (hudExp.current) hudExp.current.innerHTML = `10<sup>${Math.round(logz)}</sup> m`;
       if (hudLight.current) hudLight.current.textContent = `light crosses this view in ${lightTime(z)}`;
       if (hudPlace.current) hudPlace.current.textContent = STOPS[near].place;
-      if (hint.current) hint.current.style.opacity = String(clamp(1 - p * 4));
+      if (hint.current) {
+        const ho = clamp(1 - p * 4);
+        hint.current.style.opacity = String(ho);
+        hint.current.style.visibility = ho < 0.02 ? "hidden" : "visible";
+      }
+      rail.current.forEach((b, i) => b && b.setAttribute("aria-current", i === near ? "step" : "false"));
 
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
+    // no point drawing 10,000 stars nobody can see
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        if (!raf) raf = requestAnimationFrame(frame);
+      } else {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    });
+    io.observe(box.current!);
     return () => {
       cancelAnimationFrame(raf);
+      io.disconnect();
       window.removeEventListener("resize", resize);
     };
   }, []);
 
   return (
     <div ref={box} className="zoom" style={{ height: `${STOPS.length * 110}vh` }}>
+      <a className="skip" href="#lessons">Skip to all lessons</a>
       <div className="zoom-stage">
-        <canvas ref={cvs} className="zoom-canvas" aria-label="Zooming out from Earth to the observable universe, to scale" />
+        <canvas ref={cvs} className="zoom-canvas" role="img" aria-label="Zooming out from Earth to the observable universe, to scale" />
+
+        <nav className="rail mono" aria-label="Jump to a scale">
+          {STOPS.map((st, i) => (
+            <button key={st.place} type="button" ref={(el) => { rail.current[i] = el; }} onClick={() => jump(i)} aria-label={st.place}>
+              <span>{st.place}</span>
+              <i />
+            </button>
+          ))}
+        </nav>
 
         <div className="hud mono">
           <span ref={hudExp} className="hud-exp" />
@@ -563,7 +650,7 @@ export default function Universe() {
         </div>
 
         {STOPS.slice(1).map((st, j) => (
-          <div key={st.place} className="panel" ref={(el) => { panels.current[j + 1] = el; }}>
+          <div key={st.place} className={`panel${st.units!.length > 1 ? " dense" : ""}`} ref={(el) => { panels.current[j + 1] = el; }}>
             {st.units!.map(({ slug, only }) => {
               const ui = UNITS.findIndex((u) => u.slug === slug);
               const unit = UNITS[ui];
@@ -574,6 +661,7 @@ export default function Universe() {
                     <span className="mono">Unit {ui + 1}</span>
                     {unit.title}
                   </Link>
+                  <p className="panel-n mono">{ls.length} lessons</p>
                   <ol>
                     {ls.map(({ l, li }) => (
                       <li key={l.slug}>
@@ -590,7 +678,7 @@ export default function Universe() {
           </div>
         ))}
 
-        <div ref={hint} className="hint mono">scroll to zoom out</div>
+        <div ref={hint} className="hint mono">scroll to zoom out · <a href="#lessons">skip to the lessons</a></div>
       </div>
     </div>
   );

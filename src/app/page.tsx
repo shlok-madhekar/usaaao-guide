@@ -5,6 +5,7 @@ import Pow from "@/components/Pow";
 import Universe from "@/components/Universe";
 import { UNITS, SCALES, lessonCount } from "@/content/syllabus";
 import { DISCORD_INVITE } from "@/site";
+import { LESSON_BODIES } from "@/content/lessons";
 
 export default function Home() {
   return (
@@ -12,8 +13,9 @@ export default function Home() {
       <Nav overlay />
       <main>
         <Universe />
-        <section className="wrap all">
+        <section id="lessons" className="wrap all">
           <h2>All {lessonCount} lessons</h2>
+          <p className="all-status mono">{Object.keys(LESSON_BODIES).length} written · {lessonCount - Object.keys(LESSON_BODIES).length} on the way</p>
           <div className="all-grid">
             {UNITS.map((unit, ui) => (
               <div key={unit.slug} className="all-u">
@@ -22,7 +24,7 @@ export default function Home() {
                 <ol>
                   {unit.lessons.map((l, li) => (
                     <li key={l.slug}>
-                      <Link href={`/guide/${unit.slug}/${l.slug}`}><span className="mono">{ui + 1}.{li + 1}</span>{l.title}</Link>
+                      <Link href={`/guide/${unit.slug}/${l.slug}`} className={LESSON_BODIES[l.slug] ? "written" : undefined}><span className="mono">{ui + 1}.{li + 1}</span>{l.title}</Link>
                     </li>
                   ))}
                 </ol>
