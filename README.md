@@ -2,7 +2,7 @@
 
 A free, open-source guide to the USA Astronomy and Astrophysics Olympiad (USAAAO). Part of [Olympiad Commons](https://olympiad-commons.vercel.app).
 
-**Status: first run-through.** The full site UI is built, but there is no lesson content yet. The unit and lesson outline in `src/content/syllabus.ts` is a draft, pending the astronomy lead's plan.
+**Status: first run-through.** The full site UI is built, but there is no lesson content yet. The unit and lesson outline in `src/content/syllabus.ts` follows the astronomy lead's plan: 7 units, 31 lessons.
 
 ## Run it
 
@@ -34,11 +34,11 @@ Everything reads from **`src/content/syllabus.ts`**. To add, remove or rename a 
 ## Writing a lesson
 
 1. Say which lesson you are taking on [Discord](https://discord.gg/KGWAxqxug2).
-2. Find the lesson's slug in `src/content/syllabus.ts` (for example `orbits-1`).
-3. Write it as `src/content/lessons/orbits-1.mdx`.
+2. Find the lesson's slug in `src/content/syllabus.ts` (for example `mechanics-1`).
+3. Write it as `src/content/lessons/mechanics-1.mdx`.
 4. Register it in `src/content/lessons/index.ts`:
    ```ts
-   "orbits-1": () => import("./orbits-1.mdx"),
+   "mechanics-1": () => import("./mechanics-1.mdx"),
    ```
 5. Open a pull request.
 

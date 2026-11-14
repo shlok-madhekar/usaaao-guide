@@ -1,6 +1,5 @@
 /**
- * The whole course outline lives here. DRAFT: unit titles are a first pass,
- * pending the astronomy lead's plan.
+ * The whole course outline lives here, from the astronomy lead's plan (Nov 13).
  *
  * To change how many lessons a unit has, edit its `lessons` array. Every page
  * (home contents, course index, unit pages, lesson pages, prev/next links,
@@ -21,62 +20,50 @@ const u = (slug: string, title: string, blurb: string, lessons: string[]): Unit 
 });
 
 export const UNITS: Unit[] = [
-  u("celestial-sphere", "The celestial sphere", "Coordinates for pointing at the sky.", [
-    "The sky as a sphere",
+  u("positional", "Positional astronomy", "Coordinates, the sky, the Sun and time.", [
     "Horizon and equatorial coordinates",
-    "Converting between coordinate systems",
-    "Spherical trigonometry",
+    "Spherical trigonometry and the astronomical triangle",
+    "Coordinate transformations and celestial positioning",
+    "Reading the sky: constellations, bright stars, latitude, date and time",
+    "The Sun's path: declination, day length, polar day, shadows and sundials",
+    "Time systems, calendars and precession",
+    "Synodic motion: phases, the lunar cycle and planetary configurations",
   ]),
-  u("time", "Time and calendars", "Sidereal time, solar time and the seasons.", [
-    "Solar and sidereal days",
-    "Time zones and the equation of time",
-    "Seasons and precession",
+  u("mechanics", "Celestial mechanics", "Gravity, orbits and the two-body problem.", [
+    "Gravity, circular orbits, escape and the shell theorem",
+    "Conics, energy and angular momentum (vis-viva)",
+    "The two-body problem, barycentre and Kepler III",
+    "Manoeuvres and time along an orbit",
+    "Rotating frames, Lagrange points and tides",
   ]),
-  u("orbits", "Orbital mechanics", "Kepler, Newton and the two-body problem.", [
-    "Kepler's laws",
-    "Newtonian gravity and orbits",
-    "Energy and the vis-viva equation",
-    "Transfers and escape",
-    "Tides and the Roche limit",
+  u("radiation", "Radiation and observational astrophysics", "What light tells us about its source.", [
+    "Flux, luminosity and magnitudes",
+    "Blackbody radiation and thermal equilibrium",
+    "Radiation mechanisms",
+    "Photons, spectra and the Doppler effect",
+    "Optical depth and extinction",
+    "Binary stars",
+    "Transits and radial velocity",
   ]),
-  u("telescopes", "Telescopes and optics", "How instruments collect and resolve light.", [
-    "Lenses, mirrors and focal ratios",
-    "Magnification and resolution",
-    "Detectors and the atmosphere",
+  u("instruments", "Astronomical instrumentation", "How telescopes collect and resolve light.", [
+    "Telescope optics and image formation",
+    "Angular resolution and the Rayleigh criterion",
+    "Detectors and instrumentation",
   ]),
-  u("radiation", "Radiation and blackbodies", "What light tells us about its source.", [
-    "The electromagnetic spectrum",
-    "Blackbody radiation",
-    "Spectral lines",
-    "Doppler shifts",
+  u("stars", "Stellar physics", "How stars work, evolve and die.", [
+    "Stellar parameters and the HR diagram",
+    "Structure, fusion and the Sun",
+    "Evolution, clusters and variables",
+    "Compact objects, supernovae and accretion",
   ]),
-  u("stars", "Stellar properties", "Brightness, distance, size and mass.", [
-    "Magnitudes and flux",
-    "Parallax and distance",
-    "Luminosity, radius and temperature",
-    "Binary stars and stellar masses",
-    "The HR diagram",
+  u("cosmology", "Galaxies and cosmology", "The Milky Way and the expanding universe.", [
+    "The Milky Way, rotation curves and galaxy types",
+    "Hubble's law, distances and expansion dynamics",
+    "The CMB and the early universe",
   ]),
-  u("stellar-evolution", "Stellar evolution", "How stars are born, live and die.", [
-    "Star formation",
-    "Main-sequence stars",
-    "Late stages and remnants",
-    "Compact objects",
-  ]),
-  u("galaxies", "Galaxies", "The Milky Way and beyond.", [
-    "Structure of the Milky Way",
-    "Types of galaxies",
-    "Rotation curves and dark matter",
-  ]),
-  u("cosmology", "Cosmology", "The expanding universe.", [
-    "Hubble's law",
-    "Redshift and distances",
-    "The early universe",
-  ]),
-  u("data", "Observation and data analysis", "Working with real measurements.", [
-    "Errors and uncertainty",
-    "Fitting and plotting data",
-    "Reading star charts",
+  u("supplementary", "Supplementary topics", "Tools that show up across units.", [
+    "The virial theorem",
+    "Conic sections",
   ]),
 ];
 
