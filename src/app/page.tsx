@@ -26,7 +26,7 @@ export default function Home() {
             </div>
           </div>
           <div className="tile-xl" aria-hidden>
-            <span className="n">7</span>
+            <span className="n">4</span>
             <span className="ra">RA 05h 35m · Dec −05°</span>
             <span className="sym">As</span>
             <span className="x">USAAAO</span>
