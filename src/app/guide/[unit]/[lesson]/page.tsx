@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
-import Placeholder from "@/components/Placeholder";
 import { ALL_LESSONS, UNITS, findLesson } from "@/content/syllabus";
 import { LESSON_BODIES } from "@/content/lessons";
 import { DISCORD_INVITE, REPO_URL } from "@/site";
@@ -34,85 +33,43 @@ export default async function LessonPage({ params }: P) {
       <main className="wrap">
         <div className="lesson">
           <aside className="side">
-            <h4 className="kicker">Unit {ui + 1}</h4>
-            <Link href={`/guide/${unit.slug}`} style={{ border: 0, padding: "0 0 10px", color: "var(--ink-strong)" }}>
-              {unit.title}
-            </Link>
+            <span className="crumbs">Unit {ui + 1}</span>
+            <Link href={`/guide/${unit.slug}`} className="u">{unit.title}</Link>
             {unit.lessons.map((l, i) => (
-              <Link key={l.slug} href={`/guide/${unit.slug}/${l.slug}`} className={l.slug === lesson.slug ? "on" : ""}>
-                {ui + 1}.{i + 1} {l.title}
+              <Link key={l.slug} href={`/guide/${unit.slug}/${l.slug}`} className={`l${l.slug === lesson.slug ? " on" : ""}`}>
+                <span>{ui + 1}.{i + 1}</span><span>{l.title}</span>
               </Link>
             ))}
           </aside>
 
           <article className="article">
-            <p className="crumbs">
-              <Link href="/guide">Course</Link> / <Link href={`/guide/${unit.slug}`}>{unit.title}</Link>
-            </p>
-            <h1 className="display" style={{ fontSize: "clamp(2rem,1.3rem + 2vw,2.8rem)", marginTop: 12 }}>
-              {lesson.title}
-            </h1>
-            <p className="coord" style={{ marginTop: 10 }}>Lesson {ui + 1}.{li + 1} · Draft</p>
-
-            <div className="box">
-              <div className="box-h"><span className="kicker">Objectives</span></div>
-              <ul>
-                <li>Objective coming soon</li>
-                <li>Objective coming soon</li>
-                <li>Objective coming soon</li>
-              </ul>
-            </div>
+            <p className="crumbs"><Link href="/guide">Course</Link> / <Link href={`/guide/${unit.slug}`}>{unit.title}</Link></p>
+            <h1>{lesson.title}</h1>
+            <p className="num">Lesson {ui + 1}.{li + 1}</p>
 
             {Body ? (
               <Body />
             ) : (
               <>
-                <p className="soon">
-                  Lesson coming soon. Want to write it?{" "}
-                  <a href={DISCORD_INVITE} style={{ color: "var(--accent)" }} target="_blank" rel="noopener noreferrer">
-                    Say hi on Discord
-                  </a>{" "}
-                  or open a pull request on{" "}
-                  <a href={REPO_URL} style={{ color: "var(--accent)" }} target="_blank" rel="noopener noreferrer">GitHub</a>.
-                </p>
-                <div style={{ marginTop: 28 }}><Placeholder lines={5} /></div>
-                <div style={{ marginTop: 22 }}><Placeholder lines={4} /></div>
+                <div className="part">
+                  <h2>Notes</h2>
+                  <p>
+                    Not written yet. Want to write it? Say so on{" "}
+                    <a href={DISCORD_INVITE} target="_blank" rel="noopener noreferrer">Discord</a> or open a pull request on{" "}
+                    <a href={REPO_URL} target="_blank" rel="noopener noreferrer">GitHub</a>.
+                  </p>
+                </div>
+                <div className="part"><h2>Worked example</h2><p>Not written yet.</p></div>
+                <div className="part"><h2>Problems</h2><p>Not written yet. <Link href="/problems" style={{ color: "var(--accent)" }}>Problem bank</Link></p></div>
               </>
             )}
 
-            <div className="box">
-              <div className="box-h">
-                <span className="kicker">Worked example</span>
-                <span className="tag">Coming soon</span>
-              </div>
-              <Placeholder lines={2} label="Problem" />
-              <div style={{ marginTop: 18 }}><Placeholder lines={4} label="Solution" /></div>
-            </div>
-
-            <div className="box">
-              <div className="box-h">
-                <span className="kicker">Practice problems</span>
-                <Link href="/problems" className="coord">All problems</Link>
-              </div>
-              {["Easy", "Medium", "Hard"].map((d, i) => (
-                <div key={d} className="prob">
-                  <span className="row-n">{i + 1}</span>
-                  <Placeholder lines={2} />
-                  <span className="tag">{d}</span>
-                </div>
-              ))}
-            </div>
-
             <nav className="pn">
               {prev ? (
-                <Link href={`/guide/${prev.unit.slug}/${prev.slug}`}>
-                  <small>Previous</small><span>{prev.title}</span>
-                </Link>
+                <Link href={`/guide/${prev.unit.slug}/${prev.slug}`}><small>Previous</small><span>{prev.title}</span></Link>
               ) : <span />}
               {next ? (
-                <Link href={`/guide/${next.unit.slug}/${next.slug}`} className="r">
-                  <small>Next</small><span>{next.title}</span>
-                </Link>
+                <Link href={`/guide/${next.unit.slug}/${next.slug}`} className="r"><small>Next</small><span>{next.title}</span></Link>
               ) : <span />}
             </nav>
           </article>

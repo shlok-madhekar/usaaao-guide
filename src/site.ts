@@ -5,15 +5,7 @@ export const SITE = {
   exam: "USAAAO",
   fullName: "USA Astronomy and Astrophysics Olympiad",
   repo: "shlok-madhekar/usaaao-guide",
-  h1: "The free guide to the Astronomy Olympiad.",
-  heroText:
-    "Lessons and problems for the USA Astronomy and Astrophysics Olympiad. Open source, and still being written.",
-  rounds: [
-    { name: "First round", detail: "An online exam open to any high school student." },
-    { name: "National round", detail: "A harder written exam for the top scorers." },
-    { name: "Training camp", detail: "Theory, data analysis and night-sky observing." },
-    { name: "IOAA", detail: "Team USA at the international olympiad." },
-  ],
+  heroText: "Free notes and problems for the USA Astronomy and Astrophysics Olympiad and the IOAA.",
 };
 
 export const REPO_URL = `https://github.com/${SITE.repo}`;

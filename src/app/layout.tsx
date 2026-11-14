@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Analytics } from "@vercel/analytics/react";
-import Sky from "@/components/Sky";
 import { SITE } from "@/site";
 import "./globals.css";
 
@@ -13,24 +12,28 @@ const sans = localFont({
   ],
   variable: "--font-sans",
 });
-const mono = localFont({
+const serif = localFont({
   src: [
-    { path: "../fonts/DMMono-400.woff2", weight: "400" },
-    { path: "../fonts/DMMono-500.woff2", weight: "500" },
+    { path: "../fonts/SourceSerif4-400.woff2", weight: "400" },
+    { path: "../fonts/SourceSerif4-400-italic.woff2", weight: "400", style: "italic" },
+    { path: "../fonts/SourceSerif4-600.woff2", weight: "600" },
   ],
+  variable: "--font-serif",
+});
+const mono = localFont({
+  src: [{ path: "../fonts/DMMono-400.woff2", weight: "400" }],
   variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
-  title: { default: `${SITE.name}: free astronomy olympiad prep`, template: `%s · ${SITE.name}` },
+  title: { default: `${SITE.name}: free notes for USAAAO and the IOAA`, template: `%s · ${SITE.name}` },
   description: SITE.heroText,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
-      <body style={{ fontFamily: "var(--font-sans)" }}>
-        <Sky />
+    <html lang="en" className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
+      <body>
         {children}
         <Analytics />
       </body>

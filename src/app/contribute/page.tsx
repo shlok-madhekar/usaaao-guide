@@ -11,9 +11,9 @@ export default function Contribute() {
       <Nav />
       <main className="wrap">
         <header className="head">
-          <p className="crumbs">Contribute</p>
-          <h1 className="display">Help write the guide</h1>
-          <p className="lede">The guide is free and open source. Anyone can write a lesson, add a problem or fix a mistake.</p>
+          
+          <h1>Help write the guide</h1>
+          <p className="sub">The guide is free and open source. Anyone can write a lesson, add a problem or fix a mistake.</p>
         </header>
         <div className="prose">
           <h2>Start on Discord</h2>

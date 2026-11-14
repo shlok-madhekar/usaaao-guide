@@ -9,7 +9,7 @@ export default function Privacy() {
     <>
       <Nav />
       <main className="wrap">
-        <header className="head"><p className="crumbs">Privacy</p><h1 className="display">Privacy</h1></header>
+        <header className="head"><h1>Privacy</h1></header>
         <div className="prose">
           <p>This site has no accounts and does not ask for personal information.</p>
           <p>We use Vercel Web Analytics to count page views. It does not use cookies and does not track you across sites.</p>
