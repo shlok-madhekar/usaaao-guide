@@ -9,14 +9,10 @@ export default function Problems() {
   return (
     <>
       <Nav />
-      <main className="wrap">
-        <header className="head">
-          <h1>Problem bank</h1>
-          <p className="sub">Problems by unit and difficulty, each with a full solution.</p>
-        </header>
-        <p className="empty">
-          No problems yet. <a href={DISCORD_INVITE} target="_blank" rel="noopener noreferrer">Help write them on Discord</a>.
-        </p>
+      <main className="wrap page">
+        <h1 className="title">Problems</h1>
+        <p className="sub">Practice by unit and difficulty, each with a full solution.</p>
+        <div className="text"><p>Nothing here yet. <a href={DISCORD_INVITE} target="_blank" rel="noopener noreferrer">Help write the first set on Discord</a>.</p></div>
       </main>
       <Footer />
     </>

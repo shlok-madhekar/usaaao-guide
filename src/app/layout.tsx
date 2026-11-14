@@ -12,27 +12,19 @@ const sans = localFont({
   ],
   variable: "--font-sans",
 });
-const serif = localFont({
-  src: [
-    { path: "../fonts/SourceSerif4-400.woff2", weight: "400" },
-    { path: "../fonts/SourceSerif4-400-italic.woff2", weight: "400", style: "italic" },
-    { path: "../fonts/SourceSerif4-600.woff2", weight: "600" },
-  ],
-  variable: "--font-serif",
-});
 const mono = localFont({
-  src: [{ path: "../fonts/DMMono-400.woff2", weight: "400" }],
+  src: [{ path: "../fonts/DMMono-400.woff2", weight: "400" }, { path: "../fonts/DMMono-500.woff2", weight: "500" }],
   variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
-  title: { default: `${SITE.name}: free notes for USAAAO and the IOAA`, template: `%s · ${SITE.name}` },
+  title: { default: `${SITE.name}: the universe, one scale at a time`, template: `%s · ${SITE.name}` },
   description: SITE.heroText,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable} ${mono.variable}`}>
+    <html lang="en" className={`${sans.variable} ${mono.variable}`}>
       <body>
         {children}
         <Analytics />

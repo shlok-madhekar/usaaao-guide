@@ -9,13 +9,13 @@ export default function Contribute() {
   return (
     <>
       <Nav />
-      <main className="wrap">
-        <header className="head">
+      <main className="wrap page">
+        
           
-          <h1>Help write the guide</h1>
+          <h1 className="title">Help write the guide</h1>
           <p className="sub">The guide is free and open source. Anyone can write a lesson, add a problem or fix a mistake.</p>
-        </header>
-        <div className="prose">
+        
+        <div className="text">
           <h2>Start on Discord</h2>
           <p>
             Join the <a href={DISCORD_INVITE} target="_blank" rel="noopener noreferrer">Discord</a> and say which unit you want.

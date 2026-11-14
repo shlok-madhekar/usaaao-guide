@@ -78,3 +78,17 @@ export function findLesson(unitSlug: string, lessonSlug: string) {
   if (i < 0) return null;
   return { lesson: ALL_LESSONS[i], prev: ALL_LESSONS[i - 1] ?? null, next: ALL_LESSONS[i + 1] ?? null };
 }
+
+/** Where each unit sits on the scale of the universe (meters across), used across the site. */
+export const SCALES: Record<string, { exp: number; place: string }> = {
+  positional: { exp: 7, place: "Earth and its sky" },
+  mechanics: { exp: 12, place: "The solar system" },
+  radiation: { exp: 17, place: "The nearest stars" },
+  instruments: { exp: 1, place: "The telescope" },
+  stars: { exp: 19, place: "Star clusters" },
+  cosmology: { exp: 26, place: "The observable universe" },
+  supplementary: { exp: 0, place: "Tools for every scale" },
+};
+
+const SUP = "⁰¹²³⁴⁵⁶⁷⁸⁹";
+export const pow10 = (n: number) => "10" + String(n).split("").map((d) => SUP[+d]).join("");

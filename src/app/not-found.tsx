@@ -6,12 +6,12 @@ export default function NotFound() {
   return (
     <>
       <Nav />
-      <main className="wrap">
-        <header className="head">
+      <main className="wrap page">
+        
           
-          <h1>Page not found</h1>
-          <div className="btns"><Link href="/" className="btn solid">Back home</Link></div>
-        </header>
+          <h1 className="title">Page not found</h1>
+          <div className="cta"><Link href="/" className="go">Back home</Link></div>
+        
       </main>
       <Footer />
     </>
